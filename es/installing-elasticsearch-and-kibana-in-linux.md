@@ -50,6 +50,56 @@ Ahora si, estamos listos para instalar los componentes de Elastic Stack:
     ```Bash
     systemctl start elasticsearch
     ```
+
+4. Para correr el servicio como un cluster, debemos editar el archivo de configuración `/etc/elasticsearch/elasticsearch.yml`
+    
+    El archivo comienza así:
+    
+    ```yaml
+    # ======================== Elasticsearch Configuration =========================
+    #
+    # NOTE: Elasticsearch comes with reasonable defaults for most settings.
+    #       Before you set out to tweak and tune the configuration, make sure you
+    #       understand what are you trying to accomplish and the consequences.
+    #
+    # The primary way of configuring a node is via this file...
+    ```
+    
+    Para la configuración del cluster, supongamos que las IPs de los nodos son `10.1.102.178` y `10.1.103.227`
+    
+    Se deben sobrescribir el archivo con el siguiente:
+    
+    ```yaml
+    path.data: /var/lib/elasticsearch
+    path.logs: /var/log/elasticsearch
+
+    xpack.security.enabled: false
+    xpack.security.enrollment.enabled: true
+    http.host: 0.0.0.0
+
+    # Desactivar configuración SSL
+    xpack.security.transport.ssl.enabled: false
+    xpack.security.http.ssl.enabled: false
+
+    # Los nodos pueden actuar como nodo master, como nodo de información y como nodo de ingesta de infromación
+    node.roles: [master, data, ingest]
+    node.name: ip-10-1-103-227
+
+    # Con esta opción se desactiva el swapping para mejorar la performance (asignándole true). En hosts con poca memoria, se deja activado.
+    bootstrap.memory_lock: false
+
+    # Loopback y la dirección IP privada del nodo actual
+    network.host: [127.0.0.1, 10.1.103.227]
+
+    cluster.name: elk_cluster
+
+    # Todos los node names que son elegibles como master nodes
+    cluster.initial_master_nodes: ["ip-10-1-102-178", "ip-10-1-103-227"]
+    # Todas las IPs de los nodos
+    discovery.seed_hosts: ["10.1.102.178", "10.1.103.227"]
+    ```
+
+    Se puede acceder al archivo YAML de configuración utilizado en este ejemplo en `/files/linux/elasticsearch.yml` en este repositorio.
     
 
 ## Instalando `kibana`
@@ -92,6 +142,8 @@ Ahora si, estamos listos para instalar los componentes de Elastic Stack:
     
     ![Untitled](../img/installing-elasticsearch-and-kibana-in-linux-3.png)
     
+    Este modal aparecerá solo si Elasticsearch tiene las funciones de seguridad habilitadas. En caso de que no estén habilitadas, se podrá acceder a Kibana sin problemas, sin necesidad de crear ningún usuario. Sólo se deberá validar el acceso al servidor donde está alojado como se explica en el paso 5.
+    
 4. Obtenemos la contraseña del usuario `kibana_system` ejecutando:
     
     ```Bash
@@ -119,6 +171,9 @@ Ahora si, estamos listos para instalar los componentes de Elastic Stack:
 7. Con este usuario, podremos ingresar al dashboard de Elastic.
 
 ### Roles y permisos
+
+> [!IMPORTANT]  
+> Estas configuraciones sólo estarán disponibles si el cluster de Elasticsearch se ha configurado con seguridad habilitada. En caso contrario, con sólo obtener el URL del panel de Kibana, se podrá acceder sin problemas.
 
 Desde una cuenta con permisos de superuser, podremos crear nuevos roles, crear usuarios y crear espacios de trabajo para dichos usuarios. Para configurar todo esto:
 

@@ -1,0 +1,27 @@
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+
+xpack.security.enabled: false
+xpack.security.enrollment.enabled: true
+http.host: 0.0.0.0
+
+# Desactivar configuración SSL
+xpack.security.transport.ssl.enabled: false
+xpack.security.http.ssl.enabled: false
+
+# Los nodos pueden actuar como nodo master, como nodo de información y como nodo de ingesta de infromación
+node.roles: [master, data, ingest]
+node.name: ip-10-1-103-227
+
+# Con esta opción se desactiva el swapping para mejorar la performance (asignándole true). En hosts con poca memoria, se deja activado.
+bootstrap.memory_lock: false
+
+# Loopback y la dirección IP privada del nodo actual
+network.host: [127.0.0.1, 10.1.103.227]
+
+cluster.name: elk_cluster
+
+# Todos los node names que son elegibles como master nodes
+cluster.initial_master_nodes: ["ip-10-1-102-178", "ip-10-1-103-227"]
+# Todas las IPs de los nodos
+discovery.seed_hosts: ["10.1.102.178", "10.1.103.227"]
