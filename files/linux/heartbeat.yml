@@ -1,0 +1,29 @@
+heartbeat.config.monitors:
+  path: ${path.config}/monitors.d/*.yml
+  reload.enabled: false
+  reload.period: 5s
+
+# Configure monitors
+heartbeat.monitors:
+- type: http
+  enabled: true
+  id: webserver-monitor
+  name: Webserver Monitor
+  urls: ["http://10.1.1.254"]
+  schedule: '@every 10s'
+
+# ======================= Elasticsearch template setting =======================
+setup.template.settings:
+  index.number_of_shards: 1
+  index.codec: best_compression
+
+# ============================ Elasticsearch output ============================
+output.elasticsearch:
+  # Array of hosts to connect to.
+  hosts: ["10.1.102.178:9200", "10.1.103.227:9200"]
+  # Performance preset - one of "balanced", "throughput", "scale",
+  # "latency", or "custom".
+  preset: balanced
+
+  # Protocol - either `http` (default) or `https`.
+  #protocol: "https"
