@@ -1,0 +1,6 @@
+path.data: C:/logstash-8.13.4/data
+pipeline.workers: 2
+pipeline.batch.size: 125
+config.reload.automatic: true
+http.host: "127.0.0.1"
+http.port: 9600-9700

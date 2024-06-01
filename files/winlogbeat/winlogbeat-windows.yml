@@ -41,8 +41,8 @@ winlogbeat.event_logs:
 
 # ====================== Elasticsearch template settings =======================
 
-setup.template.settings:
-  index.number_of_shards: 1
+#setup.template.settings:
+  #index.number_of_shards: 1
   #index.codec: best_compression
   #_source.enabled: false
 
@@ -78,13 +78,13 @@ setup.template.settings:
 
 # Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
 # This requires a Kibana endpoint configuration.
-setup.kibana:
+# setup.kibana:
 
   # Kibana Host
   # Scheme and port can be left out and will be set to the default (http and 5601)
   # In case you specify and additional path, the scheme is required: http://localhost:5601/path
   # IPv6 addresses should always be defined as: https://[2001:db8::1]:5601
-  host: "localhost:5601"
+  #host: "localhost:5601"
 
   # Kibana Space ID
   # ID of the Kibana Space into which the dashboards should be loaded. By default,
@@ -118,8 +118,8 @@ setup.kibana:
 
   # Authentication credentials - either API key or username/password.
   #api_key: "id:api_key"
-  # username: "johndoe"
-  # password: "123456"
+  #username: "elastic"
+  #password: "changeme"
 
   # Pipeline to route events to security, sysmon, or powershell pipelines.
   # pipeline: "winlogbeat-%{[agent.version]}-routing"
@@ -157,7 +157,7 @@ processors:
 #logging.selectors: ["*"]
 logging.to_files: true
 logging.files:
-  path: C:\winlogbeat\Logs
+  path: C:\winlogbeat-8.13.4\logs
 logging.level: info
 
 # ============================= X-Pack Monitoring ==============================
@@ -208,4 +208,3 @@ logging.level: info
 
 # This allows to enable 6.7 migration aliases
 #migration.6_to_7.enabled: true
-

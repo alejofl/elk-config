@@ -87,7 +87,7 @@ output {
 }
 ```
 
-El archivo de un pipeline tiene tres componentes: `input`, `filter` y `output`. Sus nombres son autoexplciativos.
+El archivo de un pipeline tiene tres componentes: `input`, `filter` y `output`. Sus nombres son autoexplicativos.
 
 En cada uno de los componentes, se configura uno o más plugins para que se ejecuten al recibir datos. Por ejemplo, si quisieramos obtener los datos de una conexión HTTP, utilizaríamos el plugin `http` en el componente de `input`. Por otro lado, si quisieramos guardar los datos en una base de datos de Elasticsearch, utilizaríamos el plugin `elasticsearch` en el componente de `output`.
 
