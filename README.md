@@ -8,6 +8,12 @@ This repository contains a tutorial and some configuration files for the Elastic
 
 The tutorial can be found in English and Spanish, in its respective directories.
 
+## Content of the repository
+
+- Tutorial on how to install and configure the Elastic Stack in Spanish: [click here](./es/README.md)
+- Tutorial on how to install and configure the Elastic Stack in English: [click here](./en/README.md)
+- Configuration files for Logstash, Elasticsearch and Kibana used in the demonstration: [click here](./files)
+
 ## Final Remarks
 
 This project was done in an academic environment, as part of the curriculum of Information Networks from Instituto Tecnológico de Buenos Aires (ITBA)
