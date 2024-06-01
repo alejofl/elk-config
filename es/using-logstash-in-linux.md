@@ -236,4 +236,4 @@ Así, se generaría el siguiente objeto:
 }
 ```
 
-Una buena página web para testear los patrones de Grok es [Grok Debugger](https://grokdebug.herokuapp.com/).
+Una buena página web para testear los patrones de Grok es [Grok Debugger](https://grokdebugger.com/).
