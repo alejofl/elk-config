@@ -1,4 +1,4 @@
-# Utilizar Logstash en Ubuntu
+# Utilizar Logstash en Windows
 
 Para poder obtener los eventos de Windows se utilizará una herramienta denominada `winlogbeat`. La configuración de esta última no permite obtener los logs presentes en una carpeta determinada, sino que tiene una serie de `event logs` determinadas.
 

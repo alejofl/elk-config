@@ -1,4 +1,4 @@
-# Instalar ELK in Windows
+# Instalar Elasticsearch y Kibana en Windows
 
 En este documento veremos como instalar y correr como servicio a `elasticsearch` y a `kibana`.
 
@@ -50,7 +50,7 @@ En este documento veremos como instalar y correr como servicio a `elasticsearch`
 2. Descomprimimos el archivo `.zip` que nos descargo y después ingresamos a la carpeta `C:\kibana-8.13.4`
 3. Antes de continuar con `kibana` debemos ir a la carpeta donde se encuentra el archivo `elasticsearch-reset-password.bat` (en nuestro caso se encuentra en `C:\elasticsearch-8.13.4\bin\elasticsearch-reset-password.bat`) y abrimos una terminal como administrador para correr el siguiente comando:
     
-    ```bash
+    ```text
     >> cd elasticsearch-8.13.4\bin
     >> .\elasticsearch-reset-password.bat -u kibana_system --auto
     warning: ignoring JAVA_HOME=C:\Users\nehue\.jdks\openjdk-20.0.2; using bundled JDK
@@ -66,7 +66,7 @@ En este documento veremos como instalar y correr como servicio a `elasticsearch`
     
 4. Ingresamos al archivo `kibana.yml`presente en la carpeta `C:\elasticsearch-8.13.4\config`. Una vez en él, lo completaremos agregando las siguientes líneas:
     
-    ```bash
+    ```yaml
     # =================== System: Elasticsearch ===================
     # The URLs of the Elasticsearch instances to use for all your queries.
     elasticsearch.hosts: ["http://localhost:9200"]
@@ -86,7 +86,7 @@ En este documento veremos como instalar y correr como servicio a `elasticsearch`
 6. Extraemos el archivo `nssm.exe` de la carpeta  `nssm-<version>\win64\nssm.exe` y lo ubicamos en `C:\kibana-8.13.4\`.
 7. Abrimos una terminal como administradores en la carpeta `C:\kibana-8.13.4\` y corremos el siguiente comando:
    
-    ```bash
+    ```text
     C:\kibana-8.13.4> .\bin\nssm.exe install kibana
     ```
 8. Corriendo el comando anterior aparece una ventana de `NSSM service installer`. En ella debemos especificar los siguientes parámetros:
