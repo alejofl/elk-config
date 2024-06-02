@@ -6,8 +6,8 @@ Dado que es posible que en algún momento se quiera obtener los logs que se alma
 
 Iniciaremos explicando la configuración de `winlogbeat`, luego la de `filebeat` y finalmente la de `logstash`. 
 
-> [!IMPORTANT]
-> En la presente configuración dispondremos a todos los programas en la misma carpeta que es la siguiente: `C:\program-version`.
+> [!NOTE]
+> En los tres casos estaremos trabajando en la carpeta `C:\program-version-number`.
 
 ## Instalando `winlogbeat`
 
@@ -43,8 +43,8 @@ Iniciaremos explicando la configuración de `winlogbeat`, luego la de `filebeat`
    * Para que todo lo que recopile lo envíe a `logstash`. 
    * Para que realice logging.
     
-    > [!IMPORTANT]
-    > **Leer en el siguiente link las configuraciones para poder obtener logs de diferentes tipos. Con la configuración actual solamente obtendremos los logs de aplicaciones y los de seguridad.**
+    > [!NOTE]
+    > En el siguiente link se podrá ver más configuraciones disposibles para obtener logs de otros tipos.
     > [Configure Winlogbeat | Winlogbeat Reference [8.13] | Elastic](https://www.elastic.co/guide/en/beats/winlogbeat/current/configuration-winlogbeat-options.html)
     
     En el apartado de specific options especificamos los `event_logs` que queremos catchear:
@@ -100,7 +100,7 @@ Iniciaremos explicando la configuración de `winlogbeat`, luego la de `filebeat`
     En el apartado de processors configuraremos dos procesadores:
 
       * `add_host_metadata`: agrega información como el nombre del host, la dirección IP, el ID único del host, el nombre del sistema operativo y la arquitectura del sistema. Sin embargo, en este caso, el procesador solo se ejecutará si el evento no contiene la etiqueta forwarded.
-      * `add_cloud_metadata`: agrega información sobre la instancia de la nube en la que se está ejecutando el host, como el proveedor de la nube, la región, el ID de instancia, entre otros detalles. El ~ indica que este procesador se ejecutará en todos los eventos sin ninguna condición adicional.
+      * `add_cloud_metadata`: agrega información sobre la instancia de la nube en la que se está ejecutando el host, como el proveedor de la nube, la región, el ID de instancia, entre otros detalles. El `~` indica que este procesador se ejecutará en todos los eventos sin ninguna condición adicional.
 
     ```yaml
     # ================================= Processors =================================
@@ -211,11 +211,11 @@ Iniciaremos explicando la configuración de `winlogbeat`, luego la de `filebeat`
     C:\filebeat-8.13.4> .\install-service-filebeat.ps1
     ```
 
-> [!NOTE]
-> Si la ejecución de scripts está desactivada en su sistema, deberá configurar la política de ejecución de la sesión actual para permitir que se ejecute la secuencia de comandos. Para ello debe correr el siguiente comando en la terminal:
->    ```text
->    C:\filebeat-8.13.4> PowerShell.exe -ExecutionPolicy UnRestricted -File .\install-service-filebeat.ps1`.
->    ````
+    > [!NOTE]
+    > Si la ejecución de scripts está desactivada en su sistema, deberá configurar la política de ejecución de la sesión actual para permitir que se ejecute la secuencia de comandos. Para ello debe correr el siguiente comando en la terminal:
+    >    ```text
+    >    C:\filebeat-8.13.4> PowerShell.exe -ExecutionPolicy UnRestricted -File .\install-service-filebeat.ps1`.
+    >    ````
 
 ## Instalando `logstash`
 
@@ -230,8 +230,11 @@ Iniciaremos explicando la configuración de `winlogbeat`, luego la de `filebeat`
     http.host: "127.0.0.1"
     http.port: 9600-9700
     ```
-3. En la misma carpeta `C:\logstash-8.13.4\config`, crearemos dos archivos de configuración de pipelines. Uno para el pipeline de eventos de `winlogbeat` y el otro para los logs de `filebeat`. Veremos que estos archivos se encuentran separados en tres secciones, `input`, `filter` y `output` (sus nombres son autoexplicativos). En este caso explicaremos la configuración utilizada para la instancia EC2 de Windows. Si se llega a utilizar de manera local entonces solamente se debe modificar las IPs presentes en el `output`.
-  
+3. En la misma carpeta `C:\logstash-8.13.4\config`, crearemos dos archivos de configuración de pipelines. Uno para el pipeline de eventos de `winlogbeat` y el otro para los logs de `filebeat`. Veremos que estos archivos se encuentran separados en tres secciones, `input`, `filter` y `output` (sus nombres son autoexplicativos).
+   
+   > [!IMPORTANT]
+   > En este caso explicaremos la configuración utilizada para la instancia EC2 de Windows. Si se llega a utilizar de manera local entonces solamente se deben modificar las IPs presentes en el `output`. Igualmente más abajo podrá ver un ejemplo para este tipo de configuración.
+   
     Iniciaremos por el archivo de configuración de pipeline de `winlogbeat` que se denomina `pipeline-events.conf`. En primer lugar, seteamos el puerto por el que ingresa la información y también le asignamos un type a los logs que en este caso será `windows`. Para lo que es el output enviaremos los logs al cluster de `elasticsearch` que tienen las IPs correspondientes y además le agregamos un `index` que es lo que caracterizará a todos los eventos de Windows que se enviarán desde `winlogbeat`.
         
     ```text
@@ -273,7 +276,7 @@ Iniciaremos explicando la configuración de `winlogbeat`, luego la de `filebeat`
     }
     ```
 
-    Si queremos probar solamente la parte de eventos de windows en ambiente local debemos configurar el archivo `pipeline-events.conf` de la siguiente manera:
+    Si queremos probar que podemos obtener los eventos de Windows en ambiente local entonces debemos crear un archivo `pipeline-events.conf` de la siguiente manera:
 
     ```text
     input {
@@ -322,9 +325,9 @@ Iniciaremos explicando la configuración de `winlogbeat`, luego la de `filebeat`
 
     ```yaml
     - pipeline.id: pipeline-windows-events
-    path.config: "/logstash-8.13.4/config/pipeline-events.conf"
+      path.config: "/logstash-8.13.4/config/pipeline-events.conf"
     - pipeline.id: pipeline-windows-firewall
-    path.config: "/logstash-8.13.4/config/pipeline-firewall.conf"
+      path.config: "/logstash-8.13.4/config/pipeline-firewall.conf"
     ```
 5. Descargamos NSSM de la página:
     
@@ -332,10 +335,11 @@ Iniciaremos explicando la configuración de `winlogbeat`, luego la de `filebeat`
     
 6. Extraemos el archivo `nssm.exe` de la carpeta  `nssm-<version>\win64\nssm.exe` y lo ubicamos en `C:\logstash-8.13.4\bin\`.
    
-7. Abrimos una terminal como administrador y balidamos el archivo de configuración del pipeline corriendo el siguiente comando:
+7. Abrimos una terminal como administrador y validamos los archivos de configuración de pipeline corriendo el siguiente comando:
     
     ```text
-    C:\logstash-8.13.4> .\bin\logstash.bat -t -f C:\logstash-8.13.4\config\logstash-sample.conf
+    C:\logstash-8.13.4> .\bin\logstash.bat -t -f C:\logstash-8.13.4\config\pipeline-events.conf
+    C:\logstash-8.13.4> .\bin\logstash.bat -t -f C:\logstash-8.13.4\config\pipeline-firewall.conf
     ```
     
     Nos tiene que devolver lo siguiente, específicamente con el `Configuration OK`:
@@ -347,10 +351,10 @@ Iniciaremos explicando la configuración de `winlogbeat`, luego la de `filebeat`
     [2024-05-20T18:39:14,819][INFO ][logstash.runner          ] Using config.test_and_exit mode. Config Validation Result: OK. Exiting Logstash
     ```
     
-8. Abrimos una terminal como administradores y corremos el siguiente comando:
+8.  Abrimos una terminal como administradores y corremos el siguiente comando:
     
-    ```text
-    C:\logstash-8.13.4 > .\bin\nssm.exe install logstash
+    ```bash
+    C:\logstash-8.13.4> .\bin\nssm.exe install logstash
     ```
     
 9.  Corriendo el comando anterior aparece una ventana de `NSSM service installer`. En ella debemos especificar los siguientes parámetros:
